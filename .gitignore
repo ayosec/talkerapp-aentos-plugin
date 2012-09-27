@@ -1,1 +1,3 @@
 .rvmrc
+bin/
+generated.js
