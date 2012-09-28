@@ -1,7 +1,7 @@
 
 patterns = 0
 
-githubLogo = "http://dl.dropbox.com/u/58630011/small-octocat.png"
+githubLogo = "https://raw.github.com/ayosec/talkerapp-aentos-plugin/master/images/small-octocat.png"
 
 initializePlugin = ->
 
