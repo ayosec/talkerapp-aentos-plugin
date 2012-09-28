@@ -100,7 +100,7 @@ newBlock = ->
     block.append($("<div>")
       .text(" ")
       .css("display", "inline-block")
-      .css("width", otherLogo.width()))
+      .css("width", "40px"))
   else
     block.append($("<img>")
       .attr("src", githubLogo)
