@@ -105,6 +105,7 @@ newBlock = ->
     block.append($("<img>")
       .attr("src", githubLogo)
       .addClass("github-logo")
+      .css("width", "40px")
       .css("vertical-align", "top")
       .css("display", "inline-block"))
 
