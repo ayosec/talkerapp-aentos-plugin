@@ -72,6 +72,13 @@ def generate_and_upload
     end
 
   full_js = File.read("template.js").gsub("$snippets", "[" + snippets.join(",") + "]")
+
+  if full_js == @last_content_generated
+    puts "Unchanged."
+    return
+  end
+
+  @last_content_generated = full_js
   File.write("generated.js", full_js)
 
   # Upload it
@@ -84,6 +91,9 @@ def generate_and_upload
   form["plugin[source]"] = full_js
   form.submit
   puts " Done"
+
+rescue StandardError => e
+  puts "[ERROR]" + e.to_s
 end
 
 task :guard => :login do
