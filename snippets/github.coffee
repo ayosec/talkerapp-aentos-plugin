@@ -93,10 +93,20 @@ text = lastInsertion.text()
 
 newBlock = ->
   block = $ "<div>", class: "github-notification" 
-  block.append($("<img>")
-    .attr("src", githubLogo)
-    .css("vertical-align", "top")
-    .css("display", "inline-block"))
+
+  otherLogo = lastInsertion.closest("td").find("img.github-logo")
+
+  if otherLogo.get(0)
+    block.append($("<div>")
+      .text(" ")
+      .css("display", "inline-block")
+      .css("width", otherLogo.width()))
+  else
+    block.append($("<img>")
+      .attr("src", githubLogo)
+      .addClass("github-logo")
+      .css("vertical-align", "top")
+      .css("display", "inline-block"))
 
   block.append($("<div>")
     .addClass("content")
