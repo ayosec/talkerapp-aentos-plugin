@@ -105,6 +105,11 @@ text = lastInsertion.text()
 
 newBlock = ->
   block = $ "<div>", class: "github-notification" 
+  prefix = if navigator.appCodeName == "Mozilla" then "moz" else "webkit"
+
+  block.
+    css("display", "-#{prefix}-box").
+    css("-#{prefix}-box-orient", "horizontal")
 
   otherLogo = lastInsertion.closest("td").find("img.github-logo")
 
@@ -123,6 +128,7 @@ newBlock = ->
 
   block.append($("<div>")
     .addClass("content")
+    .css("-#{prefix}-box-flex", "1")
     .css("vertical-align", "top")
     .css("display", "inline-block"))
 
