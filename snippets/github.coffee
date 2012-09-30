@@ -86,6 +86,18 @@ initializePlugin = ->
       else
         false
 
+    parseDeletedBranch: (text) ->
+      if matched = /\[(\S+)\] (\S+) deleted (\S+) at (\S+) \S* (http\S+)/.exec(text)
+        {
+          project: matched[1],
+          user: matched[2],
+          branch: matched[3],
+          lastCommit: matched[4],
+          lastCommitURL: matched[5]
+        }
+      else
+        false
+
 initializePlugin() if patterns == 0
 
 lastInsertion = Talker.getLastInsertion()
@@ -234,8 +246,25 @@ else if mergePullRequest = patterns.parseMergePullRequest(text)
   content.append refBlock(mergePullRequest)
 
 
+else if deletedBranch = patterns.parseDeletedBranch(text)
+
+  block = newBlock()
+  concat = (string, tag = "span") -> $("<#{tag}>").text(string).appendTo(content)
+
+  content = block.find(".content")
+  concat("[DELETE BRANCH]").css("color", "#933")
+  content.append $("<b>").text(deletedBranch.user)
+  concat("deleted the")
+  concat(deletedBranch.branch, "tt").css("color", "#777")
+  concat("in")
+  concat(deletedBranch.project, "tt").css("color", "#777")
+  content.append("<br>")
+  concat("It was")
+  content.append $("<a>").text(deletedBranch.lastCommit).attr("href", deletedBranch.lastCommitURL).attr("target", "_blank")
+
+
 if block
-  block.find("span, a, b").css("margin", "auto 0.4ex")
+  block.find("tt, span, a, b").css("margin", "auto 0.4ex")
   lastInsertion.empty()
   lastInsertion.append block
 
