@@ -111,9 +111,9 @@ newBlock = ->
     css("display", "-#{prefix}-box").
     css("-#{prefix}-box-orient", "horizontal")
 
-  otherLogo = lastInsertion.closest("td").find(".github-logo")
+  otherLogo = lastInsertion.closest("td").find(".vendor-logo:last")
 
-  if otherLogo.get(0)
+  if otherLogo.is(".github-logo")
     block.append($("<div>")
       .text(" ")
       .css("display", "inline-block")
@@ -121,6 +121,7 @@ newBlock = ->
   else
     block.append($("<div>")
       .addClass("github-logo")
+      .addClass("vendor-logo")
       .css("background", "url(#{githubLogo}) no-repeat 50% 50%")
       .css("width", "40px")
       .css("height", "40px")

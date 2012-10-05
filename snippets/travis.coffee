@@ -16,16 +16,17 @@ if match = /^TRAVIS BUILD (.*)/.exec(lastInsertion.text())
     css("display", "-#{prefix}-box").
     css("-#{prefix}-box-orient", "horizontal")
 
-  otherLogo = lastInsertion.closest("td").find("img.github-logo")
+  otherLogo = lastInsertion.closest("td").find(".vendor-logo:last")
 
-  if otherLogo.get(0)
+  if otherLogo.is(".travis-logo")
     block.append($("<div>")
       .text(" ")
       .css("display", "inline-block")
       .css("width", "40px"))
   else
     block.append($("<div>")
-      .addClass("github-logo")
+      .addClass("travis-logo")
+      .addClass("vendor-logo")
       .css("background", "url(#{travisLogo}) no-repeat 50% 50%")
       .css("width", "40px")
       .css("height", "40px")
