@@ -3,9 +3,10 @@ travisLogo = "https://raw.github.com/ayosec/talkerapp-aentos-plugin/master/image
 
 lastInsertion = Talker.getLastInsertion()
 
-if match = /^TRAVIS BUILD (.*)/.exec(lastInsertion.text())
+if match = /^TRAVIS (START|BUILD) (\{.*\})/.exec(lastInsertion.text())
 
-  build = JSON.decode(match[1])
+  action = match[1]
+  build = JSON.decode(match[2])
 
   # Layout
 
@@ -41,64 +42,82 @@ if match = /^TRAVIS BUILD (.*)/.exec(lastInsertion.text())
       .css("display", "inline-block")
       .appendTo(block)
 
-  row = $("<div>").appendTo(content)
 
-  if build.number
+  if action == "BUILD"
+    row = $("<div>").appendTo(content)
+
+    if build.number
+      $("<a>")
+        .attr("href", build.build_url)
+        .attr("target", "_blank")
+        .css("text-decoration", "none")
+        .text("Build #" + build.number)
+        .appendTo(row)
+
+      $("<span>")
+        .text(" for ")
+        .appendTo(row)
+
+
     $("<a>")
-      .attr("href", build.build_url)
+      .attr("href", build.repository.url)
       .attr("target", "_blank")
       .css("text-decoration", "none")
-      .text("Build #" + build.number)
+      .text(build.repository.owner_name + "/" + build.repository.name)
       .appendTo(row)
 
-    $("<span>")
-      .text(" for ")
-      .appendTo(row)
+    row.append($("<span>").text(" ("))
+    row.append(
+      $("<a>")
+        .attr("target", "_blank")
+        .css("text-decoration", "none")
+        .attr("href", build.compare_url)
+        .text("#{build.branch} at #{build.commit.slice(0, 6)}"))
+    row.append($("<span>").text(")"))
 
+    time =
+      if build.duration > 60
+        "#{parseInt(build.duration / 60)}m #{build.duration % 60}s"
+      else
+        "#{build.duration}s"
 
-  $("<a>")
-    .attr("href", build.repository.url)
-    .attr("target", "_blank")
-    .css("text-decoration", "none")
-    .text(build.repository.owner_name + "/" + build.repository.name)
-    .appendTo(row)
+    resultColor = if parseInt(build.result) == 0 then "#272" else "#944"
 
-  row.append($("<span>").text(" ("))
-  row.append(
-    $("<a>")
-      .attr("target", "_blank")
-      .css("text-decoration", "none")
-      .attr("href", build.compare_url)
-      .text("#{build.branch} at #{build.commit.slice(0, 6)}"))
-  row.append($("<span>").text(")"))
+    $("<div>")
+      .append(
+        $("<span>")
+          .width(10)
+          .height(10)
+          .css("border-radius", "5px")
+          .css("display", "inline-block")
+          .css("margin-right", "1ex")
+          .css("background-color", resultColor))
+      .append(
+        $("<b>")
+          .css("color", resultColor)
+          .text(build.result_message ? ""))
+      .append(
+        $("<span>")
+          .css("margin-left", "1ex")
+          .css("color", "#777")
+          .text(time))
+      .appendTo(content)
 
-  time =
-    if build.duration > 60
-      "#{parseInt(build.duration / 60)}m #{build.duration % 60}s"
-    else
-      "#{build.duration}s"
-
-  resultColor = if parseInt(build.result) == 0 then "#272" else "#944"
-
-  $("<div>")
-    .append(
-      $("<span>")
-        .width(10)
-        .height(10)
-        .css("border-radius", "5px")
-        .css("display", "inline-block")
-        .css("margin-right", "1ex")
-        .css("background-color", resultColor))
-    .append(
-      $("<b>")
-        .css("color", resultColor)
-        .text(build.result_message ? ""))
-    .append(
-      $("<span>")
-        .css("margin-left", "1ex")
-        .css("color", "#777")
-        .text(time))
-    .appendTo(content)
+  else if action == "START"
+    content
+      .append($("<b>").text("Build started"))
+      .append($("<span>").text(" for "))
+      .append(
+        $("<a>")
+          .attr("href", "https://github.com/#{build.repository}")
+          .attr("target", "_blank")
+          .text(build.repository))
+      .append($("<span>").text(" at "))
+      .append(
+        $("<a>")
+          .attr("href", "https://github.com/#{build.repository}/commit/#{build.commit}")
+          .attr("target", "_blank")
+          .text(build.commit.slice(0, 6)))
 
   lastInsertion.empty()
   lastInsertion.append(block)
