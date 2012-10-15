@@ -40,7 +40,7 @@ initializePlugin = ->
           user: matched[4],
           url: matched[5]
         }
-      else if matched = /\[(\S+)\/(\S+)\] (.*) - (\S+)$/.exec(text)
+      else if matched = /\[(\S+)\/(\S+)\] (.*) - (.+)$/.exec(text)
         {
           project: matched[1],
           branch: matched[2],
