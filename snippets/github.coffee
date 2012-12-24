@@ -113,20 +113,16 @@ newBlock = ->
 
   otherLogo = lastInsertion.closest("td").find(".vendor-logo:last")
 
-  if otherLogo.is(".github-logo")
-    block.append($("<div>")
-      .text(" ")
-      .css("display", "inline-block")
-      .css("width", "40px"))
-  else
-    block.append($("<div>")
-      .addClass("github-logo")
-      .addClass("vendor-logo")
-      .css("background", "url(#{githubLogo}) no-repeat 50% 50%")
-      .css("width", "40px")
-      .css("height", "40px")
-      .css("vertical-align", "top")
-      .css("display", "inline-block"))
+  block.append($("<span>")
+    .addClass("github-logo")
+    .addClass("vendor-logo")
+    .css("background", "url(#{githubLogo}) no-repeat 50% 50%")
+    .css("background-size", "100%")
+    .css("margin-right", "20px")
+    .css("width", "20px")
+    .css("height", "20px")
+    .css("vertical-align", "top")
+    .css("display", "inline-block"))
 
   block.append($("<div>")
     .addClass("content")
@@ -272,9 +268,13 @@ else if deletedBranch = patterns.parseDeletedBranch(text)
 
 
 if block
-  block.find("tt, span, a, b").css("margin", "auto 0.4ex")
+  block.find("tt, span:not(.vendor-logo), a, b").css("margin", "auto 0.4ex")
   lastInsertion.empty()
   lastInsertion.append block
 
   # Disable yellow shadow
-  setTimeout (-> lastInsertion.parents("blockquote").css("box-shadow", "0 0 0 0")), 100
+  setTimeout (->
+    lastInsertion.parents("blockquote").
+      css("box-shadow", "0 0 0 0").
+      css("background", "white")
+  ), 100
