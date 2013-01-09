@@ -71,7 +71,10 @@ def generate_and_upload
       "function(event) { #{content} }"
     end
 
-  full_js = File.read("template.js").gsub("$snippets", "[" + snippets.join(",") + "]")
+  full_js = [
+    File.read("template.js").gsub("$snippets", "[" + snippets.join(",") + "]"),
+    File.read("emoji/icons.js")
+  ].join
 
   if full_js == @last_content_generated
     puts "Unchanged."
